@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<link>
+<meta charset="UTF-8">
+<title>Board List</title>
+<link rel="stylesheet" th:href="@{/css/style.css}"></link> <!-- (1) -->
+<!--
+    해당 파일은 Visual Code에서 작성되었으며 YunDaeHyeon.github.io와는 무관한 파일입니다.
+    해당 파일은 YunDaeHyeon 레포지토리의 Spring Boot에서 사용됩니다.
+-->
+</head>
+<body>
+<div class="container">
+    <h2>게시판 목록</h2>
+    <h3 th:text="${message}"></h3>
+    <table class="board_list">
+        <colgroup>
+            <col width="15%"/>
+            <col width="*"/>
+            <col width="20%"/>
+            <col width="15%"/>
+            <col width="20%"/>
+        </colgroup>
+        <thead>
+        <tr>
+            <th scope="col">글번호</th>
+            <th scope="col">제목</th>
+            <th scope="col">작성자</th>
+            <th scope="col">조회수</th>
+            <th scope="col">작성일</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:if="${#lists.size(board)} > 0" th:each="board : ${board}">
+            <td th:text="${board.boardNo}"></td>
+            <td class="title"><a href="/board/read?boardIdx=" th:attrappend="href=${board.boardNo}"
+                                 th:text="${board.boardTitle}"></a></td>
+            <td th:text="${board.boardCreator}"></td>
+            <td th:text="${board.boardHit}"></td>
+            <td th:text="${board.boardCreatedDate}"></td>
+        </tr>
+        <tr th:unless="${#lists.size(board)} > 0">
+            <td colspan="4">조회된 결과가 없습니다.</td>
+        </tr>
+        </tbody>
+    </table>
+    <a href="/board/write" class="btn">글 쓰기</a>
+</div>
+</body>
+</html>
+
+<!--
+(1)
+타임리프(Thymeleaf)를 사용하기 위한 네임스페이스 선언.
+
+(2) / (4)
+타임리프(Thymeleaf)를 이용하여 목록을 표시
+
+(3)
+list 변수를 통하여 서버에서 전달된 데이터에 접근하여 화면에 뿌려준다.
+쿼리에서 게시글에 필요한 board_idx, title, hit_cnt, created_datetime이라는 컬럼을 조회한다.
+(BoardDTO의 boardIdx, title, hitCnt, createdDatetime이라는 변수에 저장되어있음.)
+View에서는 서버로부터 전달될 게시글 목록을 list라는 변수를 통하여 접근할 수 있음.
+ -->

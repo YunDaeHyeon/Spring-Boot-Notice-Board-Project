@@ -32,7 +32,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .formLogin()
                 .loginPage("/login-page")
                 .loginProcessingUrl("/login-action")
-                .defaultSuccessUrl("/login-success")
+                .defaultSuccessUrl("/board/list")
                 .failureUrl("/login-fail")
                 .and()
                 .csrf().disable();
