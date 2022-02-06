@@ -28,7 +28,7 @@ public class DatabaseConfiguration {
     @Bean
     public DataSource dataSource() throws Exception{
         DataSource dataSource = new HikariDataSource(hikariConfig());
-        System.out.println(dataSource().toString());
+        System.out.println(dataSource.toString());
         return dataSource;
     }
 
