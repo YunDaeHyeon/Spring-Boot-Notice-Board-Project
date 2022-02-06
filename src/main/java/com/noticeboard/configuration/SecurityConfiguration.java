@@ -26,12 +26,13 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         http
                 .authorizeRequests()
                 .antMatchers("/resources/**","/login-page","/register-page","/login-fail").permitAll() // 모두 허용
-                .antMatchers("/boardMain").hasRole("USER")
-                .antMatchers("/boardMain").hasRole("ADMIN")
+                .antMatchers("/loginAction").hasRole("USER")
+                .antMatchers("/loginAction").hasRole("ADMIN")
                 .and()
                 .formLogin()
                 .loginPage("/login-page")
                 .loginProcessingUrl("/login-action")
+                .defaultSuccessUrl("/login-success")
                 .failureUrl("/login-fail")
                 .and()
                 .csrf().disable();

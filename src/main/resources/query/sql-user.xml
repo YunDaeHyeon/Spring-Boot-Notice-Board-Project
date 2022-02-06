@@ -6,4 +6,8 @@
         insert into user (user_id, user_password, user_name, user_auth, created_date)
         VALUES (#{userId},#{userPassword},#{userName},#{userAuth},#{createdDate});
     </insert>
+    <!-- 로그인 -->
+    <select id="loginAction" resultType="com.noticeboard.dto.UserDTO">
+        select * from user where user_id = #{userId}
+    </select>
 </mapper>
