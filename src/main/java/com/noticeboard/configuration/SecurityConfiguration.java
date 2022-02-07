@@ -3,11 +3,24 @@ package com.noticeboard.configuration;
 import com.noticeboard.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.InternalAuthenticationServiceException;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.web.authentication.AuthenticationFailureHandler;
+import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
+import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
+
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+import java.io.IOException;
 
 @EnableWebSecurity
 @RequiredArgsConstructor
@@ -24,17 +37,43 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
+                .csrf().disable()
                 .authorizeRequests()
-                .antMatchers("/resources/**","/login-page","/register-page","/login-fail").permitAll() // 모두 허용
-                .antMatchers("/loginAction").hasRole("USER")
-                .antMatchers("/loginAction").hasRole("ADMIN")
+                // 권한 설정
+                    .antMatchers("/resources/**","/login-page","/register-page","/login-fail").permitAll() // 모두 허용
+                    .antMatchers("/board/list").hasRole("USER")
+                    .antMatchers("/board/write").hasRole("ADMIN")
+//                    .antMatchers("/board/list").hasRole("ADMIN")
                 .and()
                 .formLogin()
-                .loginPage("/login-page")
-                .loginProcessingUrl("/login-action")
-                .defaultSuccessUrl("/board/list")
-                .failureUrl("/login-fail")
+                // 로그인 설정
+                    .loginPage("/login-page")
+                    .loginProcessingUrl("/login-action")
+                    .usernameParameter("userId")
+                    .passwordParameter("userPassword")
+                    .successHandler(new LoginSuccessHandler())
+                    .failureUrl("/login-fail")
                 .and()
-                .csrf().disable();
+                // 로그아웃 설정
+                .logout()
+                    .logoutUrl("/logout")
+                    .deleteCookies("JSESSIONID")
+                    .invalidateHttpSession(true)
+                    .logoutSuccessHandler(new LogoutSuccessHandler() {
+                        @Override
+                        public void onLogoutSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
+//                            HttpSession session = request.getSession();
+//                          session.invalidate();
+                            response.sendRedirect("/login-page");
+                        }
+                    });
+    }
+}
+
+class LoginSuccessHandler implements AuthenticationSuccessHandler{
+
+    @Override
+    public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
+        response.sendRedirect("/board/list");
     }
 }
