@@ -55,25 +55,38 @@ public class NoticeBoardController {
         return "loginFail";
     }
 
+    // 로그인 성공 시 메인 페이지 이동 - 등급 : ROLE_USER
     @GetMapping("/board/list")
     public ModelAndView loginAction(Model model, Authentication authentication) throws Exception{
-//        // 로그인
         User user = (User) authentication.getPrincipal();
         model.addAttribute("message","아이디 : "+user.getUsername()+", 권한 : "+ authentication.getAuthorities().toString());
         System.out.println(authentication.getAuthorities().toString());
         // 게시글
-        ModelAndView mv = new ModelAndView("/board/list");
+        ModelAndView mv = new ModelAndView("board/list");
         List<BoardDTO> boardDTOList = boardService.boardInquire();
         mv.addObject("board",boardDTOList);
 
         return mv;
     }
 
+    // 로그인 성공 시 메인 페이지 이동 - 등급 : ROLE_ADMIN
+    @GetMapping("/admin/list")
+    public ModelAndView adminBoardListView(Model model, Authentication authentication) throws Exception{
+        User user = (User) authentication.getPrincipal();
+        model.addAttribute("message","아이디 : "+user.getUsername()+", 권한 : "+ authentication.getAuthorities().toString());
+        System.out.println(authentication.getAuthorities().toString());
+        // 게시글
+        ModelAndView mv = new ModelAndView("admin/list");
+        List<BoardDTO> boardDTOList = boardService.boardInquire();
+        mv.addObject("admin",boardDTOList);
+
+        return mv;
+    }
+
+    // 게시글 쓰기 - 등급 : ROLE_USER
     @GetMapping("/board/write")
     public String boardWriteView(){
         return "board/write";
     }
-
-    // 게시글 관리
 
 }

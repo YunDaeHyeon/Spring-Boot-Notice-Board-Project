@@ -42,8 +42,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 // 권한 설정
                     .antMatchers("/resources/**","/login-page","/register-page","/login-fail").permitAll() // 모두 허용
                     .antMatchers("/board/list").hasRole("USER")
-                    .antMatchers("/board/write").hasRole("ADMIN")
-//                    .antMatchers("/board/list").hasRole("ADMIN")
+                    .antMatchers("/board/write").hasRole("USER")
+                    .antMatchers("/admin/list").hasRole("ADMIN")
                 .and()
                 .formLogin()
                 // 로그인 설정
@@ -74,6 +74,10 @@ class LoginSuccessHandler implements AuthenticationSuccessHandler{
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
-        response.sendRedirect("/board/list");
+        System.out.println("LoginSuccessHandler : "+authentication.getAuthorities().toString());
+        if(authentication.getAuthorities().toString().equals("[ROLE_USER]"))
+            response.sendRedirect("/board/list");
+        if(authentication.getAuthorities().toString().equals("[ROLE_ADMIN]"))
+            response.sendRedirect("/admin/list");
     }
 }
