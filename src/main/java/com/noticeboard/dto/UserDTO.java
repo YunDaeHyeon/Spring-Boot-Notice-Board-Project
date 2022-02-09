@@ -1,6 +1,7 @@
 package com.noticeboard.dto;
 
 import lombok.Data;
+import org.springframework.context.annotation.Bean;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -32,6 +33,7 @@ public class UserDTO implements UserDetails {
         return this.userId;
     }
 
+    @Bean
     public String getUserName(){
         return this.userName;
     }

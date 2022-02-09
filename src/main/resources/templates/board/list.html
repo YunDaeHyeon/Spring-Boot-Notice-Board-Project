@@ -33,7 +33,7 @@
         <tbody>
         <tr th:if="${#lists.size(board)} > 0" th:each="board : ${board}">
             <td th:text="${board.boardNo}"></td>
-            <td class="title"><a href="/board/read?boardIdx=" th:attrappend="href=${board.boardNo}"
+            <td class="title"><a href="/board/read?boardNo=" th:attrappend="href=${board.boardNo}"
                                  th:text="${board.boardTitle}"></a></td>
             <td th:text="${board.boardCreator}"></td>
             <td th:text="${board.boardHit}"></td>

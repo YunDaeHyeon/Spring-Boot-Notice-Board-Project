@@ -83,10 +83,26 @@ public class NoticeBoardController {
         return mv;
     }
 
-    // 게시글 쓰기 - 등급 : ROLE_USER
+    // 게시글 쓰기 페이지 이동 - 등급 : ROLE_USER
     @GetMapping("/board/write")
-    public String boardWriteView(){
+    public String boardWriteView() throws Exception {
         return "board/write";
+    }
+
+    // 게시글 쓰기 엑션 Method : POST
+    @PostMapping("/board/board-insert")
+    public String boardInsertAction(BoardDTO boardDTO) throws Exception{
+        boardService.boardInsertAction(boardDTO);
+        return "redirect:/board/list";
+    }
+
+    // 게시글 상세화면 이동 - 등급 : ROLE_USER
+    @GetMapping("/board/read")
+    public ModelAndView boardReadView(@RequestParam int boardNo) throws Exception{
+        ModelAndView mv = new ModelAndView("board/read");
+        BoardDTO boardDTO = boardService.boardReadAction(boardNo);
+        mv.addObject("board",boardDTO);
+        return mv;
     }
 
 }

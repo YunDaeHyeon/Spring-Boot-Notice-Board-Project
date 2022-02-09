@@ -8,15 +8,15 @@
 <body>
 <div class="container">
     <h2>게시판 등록</h2>
-    <form id="frm" name="frm" method="post" action="/board/insertBoard.do">
+    <form id="frm" name="frm" method="post" action="/board/board-insert">
         <table class="board_detail">
             <tr>
                 <td>제목</td>
-                <td><input type="text" id="title" name="title"></td>
+                <td><input type="text" id="boardTitle" name="boardTitle"></td>
             </tr>
             <tr>
                 <td colspan="2">
-                    <textarea id="contents" name="contents"></textarea>
+                    <textarea id="boardContents" name="boardContents"></textarea>
                 </td>
             </tr>
         </table>

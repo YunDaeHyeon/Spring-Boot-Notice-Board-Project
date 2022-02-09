@@ -2,9 +2,22 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.noticeboard.mapper.BoardMapper">
     <!-- 게시글 조회 -->
-
     <select id="boardInquire" resultType="com.noticeboard.dto.BoardDTO">
         select board_no, board_title, board_creator, board_hit, DATE_FORMAT(board_created_date, '%Y.%m.%d %H:%i:%s') AS board_created_date
         from board where board_deleted_check = 'N' ORDER BY board_no DESC
+    </select>
+    <!-- 게시글 입력(글쓰기) -->
+    <insert id="boardInsertAction" parameterType="com.noticeboard.dto.BoardDTO">
+        insert into board(board_title, board_contents, board_creator, board_created_date)
+        values (#{boardTitle},#{boardContents},'User',NOW())
+    </insert>
+    <!-- 게시글 조회수 증가 -->
+    <update id="boardHitCount" parameterType="int">
+        UPDATE board set board_hit = board_hit+1 WHERE #{boardNo}
+    </update>
+    <!-- 상세 게시글 조회 -->
+    <select id="boardReadAction" parameterType="int" resultType="com.noticeboard.dto.BoardDTO">
+        select board_no, board_title, board_contents, board_hit, DATE_FORMAT(board_created_date, '%Y.%m.%d %H:%i:%s')
+        as board_created_date, board_creator from board where board_no = #{boardNo} AND board_deleted_check = 'N'
     </select>
 </mapper>
